@@ -1,0 +1,46 @@
+{
+  "name": "contra-color",
+  "version": "1.0.0",
+  "description": "For a given color, find a contrasting color (not optimal).",
+  "main": "dist/contra-color.cjs.js",
+  "module": "dist/contra-color.esm.js",
+  "browser": "dist/contra-color.umd.js",
+  "dependencies": {},
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^21.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.5",
+    "@rollup/plugin-typescript": "^8.2.5",
+    "rollup": "^2.58.0",
+    "ts-node": "^10.2.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.4.3"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "ts-node test/test.ts",
+    "pretest": "npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/canbax/contra-color.git"
+  },
+  "keywords": [
+    "inverse",
+    "color",
+    "color",
+    "contrast",
+    "RGB",
+    "sRGB",
+    "luminance"
+  ],
+  "author": "yusuf canbaz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/canbax/contra-color/issues"
+  },
+  "homepage": "https://github.com/canbax/contra-color#readme"
+}
