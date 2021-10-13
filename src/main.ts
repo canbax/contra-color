@@ -1,6 +1,11 @@
 const RE_HEX = /^(?:[0-9a-f]{3}){1,2}$/i;
 const COLOR_WIDTH = 256;
 
+interface IContraColor {
+  color: string;
+  contrast: number;
+}
+
 function sRGBtoLin(colorChannel: number) {
   // Send this function a decimal sRGB gamma encoded color channel
   // between 0.0 and 1.0, and it returns a linearized value.
@@ -63,7 +68,10 @@ function cloneArr<T>(arr: T[]): T[] {
   return r;
 }
 
-export function getContrastingColor(c: string, isLinearLuminance = true) {
+export function getContrastingColor(
+  c: string,
+  isLinearLuminance = true
+): IContraColor {
   const rgb = hex2RGBArray(c);
   let maxContrast = 0;
   const greedyResults = [0, 0, 0];
@@ -81,7 +89,8 @@ export function getContrastingColor(c: string, isLinearLuminance = true) {
       }
     }
   }
-  return "#" + greedyResults.map((c) => padz(c.toString(16), 2)).join("");
+  const r = "#" + greedyResults.map((c) => padz(c.toString(16), 2)).join("");
+  return { color: r, contrast: maxContrast };
 }
 
 export function getContrast(c1: string, c2: string, isLinearLuminance = true) {

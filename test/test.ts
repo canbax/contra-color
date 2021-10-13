@@ -19,19 +19,17 @@ function testRandom(
   for (let i = 0; i < count; i++) {
     const c1 = getRandomColor();
     const c2 = getContrastingColor(c1, isLinearLuminance);
-    const constrast = getContrast(c1, c2, isLinearLuminance);
-    totContrast += constrast;
-    console.log(" c1: ", c1, " c2: ", c2, " constrast: ", constrast);
-    // assert.equal(constrast > contrastThreshold, true);
+    totContrast += c2.contrast;
+    // console.log(" c1: ", c1, " c2: ", c2.color, " constrast: ", c2.contrast);
+    assert.equal(c2.contrast > contrastThreshold, true);
   }
   console.log("avg contrast: ", totContrast / count);
 }
 
 function testManual(color: string, isLinearLuminance = true) {
   const c2 = getContrastingColor(color, isLinearLuminance);
-  const constrast = getContrast(color, c2, isLinearLuminance);
-  assert.equal(constrast > 3, true);
-  console.log(" c1: ", color, " c2: ", c2, " constrast: ", constrast);
+  assert.equal(c2.contrast > 3, true);
+  console.log(" c1: ", color, " c2: ", c2.color, " constrast: ", c2.contrast);
 }
 
 function testCertainCases(isLinearLuminance = true) {
@@ -42,7 +40,7 @@ function testCertainCases(isLinearLuminance = true) {
   testManual("#808080", isLinearLuminance);
 }
 
-// testRandom(100);
-testCertainCases(false);
-console.log("------------------------------------------------------");
-testCertainCases(true);
+testRandom();
+// testCertainCases(false);
+// console.log("------------------------------------------------------");
+// testCertainCases(true);
