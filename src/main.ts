@@ -8,7 +8,7 @@ function sRGBtoLin(colorChannel: number) {
   if (colorChannel <= 0.04045) {
     return colorChannel / 12.92;
   } else {
-    return Math.pow(((colorChannel + 0.055) / 1.055), 2.4);
+    return Math.pow((colorChannel + 0.055) / 1.055, 2.4);
   }
 }
 
@@ -21,7 +21,7 @@ function luminance(rgb: number[]) {
 
 // thanks to https://github.com/onury/invert-color
 function hex2RGBArray(hex: string) {
-  if (hex.slice(0, 1) === '#') {
+  if (hex.slice(0, 1) === "#") {
     hex = hex.slice(1);
   }
   if (!RE_HEX.test(hex)) {
@@ -34,13 +34,17 @@ function hex2RGBArray(hex: string) {
   return [
     parseInt(hex.slice(0, 2), 16), // r
     parseInt(hex.slice(2, 4), 16), // g
-    parseInt(hex.slice(4, 6), 16)  // b
+    parseInt(hex.slice(4, 6), 16), // b
   ];
 }
 
-function contrast(rgb1: number[], rgb2: number[]) {
-  const l1 = luminance(rgb1);
-  const l2 = luminance(rgb2);
+function contrast(rgb1: number[], rgb2: number[], isLinearLuminance = true) {
+  let l1 = luminance(rgb1);
+  let l2 = luminance(rgb2);
+  if (!isLinearLuminance) {
+    l1 = Math.pow(l1, 0.425);
+    l2 = Math.pow(l2, 0.425);
+  }
   if (l1 > l2) {
     return (l1 + 0.05) / (l2 + 0.05);
   }
@@ -48,52 +52,41 @@ function contrast(rgb1: number[], rgb2: number[]) {
 }
 
 function padz(str: string, len: number) {
-  return (new Array(len).join('0') + str).slice(-len);
+  return (new Array(len).join("0") + str).slice(-len);
 }
 
-export function getInverse(c: string) {
+function cloneArr<T>(arr: T[]): T[] {
+  const r: T[] = [];
+  for (let i = 0; i < arr.length; i++) {
+    r.push(arr[i]);
+  }
+  return r;
+}
+
+export function getContrastingColor(c: string, isLinearLuminance = true) {
   const rgb = hex2RGBArray(c);
   let maxContrast = 0;
-  let greedyR = 0;
-  let greedyG = 0;
-  let greedyB = 0;
-  // blue is the least important
-  for (let i = 0; i < COLOR_WIDTH; i++) {
-    const rgb2 = [greedyR, greedyG, i];
-    const currContrast = contrast(rgb, rgb2);
-    if (currContrast > maxContrast) {
-      maxContrast = currContrast;
-      greedyB = i;
+  const greedyResults = [0, 0, 0];
+  // process from the most important to least important
+  const channelIdxes = [1, 0, 2];
+  for (let i = 0; i < channelIdxes.length; i++) {
+    const currChannelIdx = channelIdxes[i];
+    for (let j = 0; j < COLOR_WIDTH; j++) {
+      const tmp = cloneArr(greedyResults);
+      tmp[currChannelIdx] = j;
+      const currContrast = contrast(rgb, tmp, isLinearLuminance);
+      if (currContrast > maxContrast) {
+        maxContrast = currContrast;
+        greedyResults[currChannelIdx] = j;
+      }
     }
   }
-
-  // red is the second most important in luminance
-  for (let i = 0; i < COLOR_WIDTH; i++) {
-    const rgb2 = [i, greedyG, rgb[2]];
-    const currContrast = contrast(rgb, rgb2);
-    if (currContrast > maxContrast) {
-      maxContrast = currContrast;
-      greedyR = i;
-    }
-  }
-
-  // green is the most important in luminance calculate it last to make a significant impact
-  for (let i = 0; i < COLOR_WIDTH; i++) {
-    const rgb2 = [rgb[0], i, rgb[2]];
-    const currContrast = contrast(rgb, rgb2);
-    if (currContrast > maxContrast) {
-      maxContrast = currContrast;
-      greedyG = i;
-    }
-  }
-
-  const r = [greedyR, greedyG, greedyB];
-  return '#' + r.map(c => padz(c.toString(16), 2)).join('');
+  return "#" + greedyResults.map((c) => padz(c.toString(16), 2)).join("");
 }
 
-export function getContrast(c1: string, c2: string) {
+export function getContrast(c1: string, c2: string, isLinearLuminance = true) {
   const rgb1 = hex2RGBArray(c1);
   const rgb2 = hex2RGBArray(c2);
 
-  return contrast(rgb1, rgb2);
+  return contrast(rgb1, rgb2, isLinearLuminance);
 }
