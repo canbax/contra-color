@@ -6,6 +6,8 @@ interface IContraColor {
   contrast: number;
 }
 
+type RGB = [number, number, number];
+
 function sRGBtoLin(colorChannel: number) {
   // Send this function a decimal sRGB gamma encoded color channel
   // between 0.0 and 1.0, and it returns a linearized value.
@@ -17,7 +19,7 @@ function sRGBtoLin(colorChannel: number) {
   }
 }
 
-function luminance(rgb: number[]) {
+function luminance(rgb: RGB) {
   const r = sRGBtoLin(rgb[0]);
   const g = sRGBtoLin(rgb[1]);
   const b = sRGBtoLin(rgb[2]);
@@ -25,7 +27,7 @@ function luminance(rgb: number[]) {
 }
 
 // thanks to https://github.com/onury/invert-color
-function hex2RGBArray(hex: string) {
+function hex2RGBArray(hex: string): RGB {
   if (hex.slice(0, 1) === "#") {
     hex = hex.slice(1);
   }
@@ -43,7 +45,7 @@ function hex2RGBArray(hex: string) {
   ];
 }
 
-function contrast(rgb1: number[], rgb2: number[], isLinearLuminance = true) {
+function contrast(rgb1: RGB, rgb2: RGB, isLinearLuminance = true) {
   let l1 = luminance(rgb1);
   let l2 = luminance(rgb2);
   if (!isLinearLuminance) {
@@ -68,28 +70,50 @@ function cloneArr<T>(arr: T[]): T[] {
   return r;
 }
 
+function getRandomColor(): RGB {
+  const r = Math.floor(Math.random() * 255);
+  const g = Math.floor(Math.random() * 255);
+  const b = Math.floor(Math.random() * 255);
+  return [r, g, b];
+}
+
 export function getContrastingColor(
   c: string,
   isLinearLuminance = true
 ): IContraColor {
   const rgb = hex2RGBArray(c);
   let maxContrast = 0;
-  const greedyResults = [0, 0, 0];
-  // process from the most important to least important
-  const channelIdxes = [1, 0, 2];
-  for (let i = 0; i < channelIdxes.length; i++) {
-    const currChannelIdx = channelIdxes[i];
-    for (let j = 0; j < COLOR_WIDTH; j++) {
-      const tmp = cloneArr(greedyResults);
-      tmp[currChannelIdx] = j;
-      const currContrast = contrast(rgb, tmp, isLinearLuminance);
-      if (currContrast > maxContrast) {
-        maxContrast = currContrast;
-        greedyResults[currChannelIdx] = j;
+  let greedyResults: RGB[] = [[0, 0, 0], [255, 255, 255], getRandomColor()];
+
+  for (let a = 0; a < greedyResults.length; a++) {
+    // process from the most important to least important
+    const channelIdxes = [1, 0, 2];
+    maxContrast = 0;
+    for (let i = 0; i < channelIdxes.length; i++) {
+      const currChannelIdx = channelIdxes[i];
+      for (let j = 0; j < COLOR_WIDTH; j++) {
+        const tmp = cloneArr(greedyResults[a]) as RGB;
+        tmp[currChannelIdx] = j;
+        const currContrast = contrast(rgb, tmp, isLinearLuminance);
+        if (currContrast > maxContrast) {
+          maxContrast = currContrast;
+          greedyResults[a][currChannelIdx] = j;
+        }
       }
     }
   }
-  const r = "#" + greedyResults.map((c) => padz(c.toString(16), 2)).join("");
+
+  let maxOfGreedyResults: RGB = [0, 0, 0];
+  maxContrast = 0;
+  for (let a = 0; a < greedyResults.length; a++) {
+    const currContrast = contrast(rgb, greedyResults[a], isLinearLuminance);
+    if (currContrast > maxContrast) {
+      maxContrast = currContrast;
+      maxOfGreedyResults = greedyResults[a];
+    }
+  }
+
+  const r = "#" + maxOfGreedyResults.map((c) => padz(c.toString(16), 2)).join("");
   return { color: r, contrast: maxContrast };
 }
 
