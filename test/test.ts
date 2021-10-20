@@ -26,9 +26,22 @@ function testRandom(
   console.log("avg contrast: ", totContrast / count);
 }
 
-function testManual(color: string, isLinearLuminance = true) {
-  const c2 = getContrastingColor(color, isLinearLuminance);
-  assert.equal(c2.contrast > 3, true);
+function testManual(
+  color: string,
+  isLinearLuminance = true,
+  minContrastDiff = 3,
+  maxContrastDiff = -1
+) {
+  let c2 = null;
+  if (maxContrastDiff > 0) {
+    c2 = getContrastingColor(color, isLinearLuminance, minContrastDiff);
+  } else {
+    c2 = getContrastingColor(color, isLinearLuminance);
+  }
+  // assert.equal(c2.contrast > minContrastDiff, true);
+  if (maxContrastDiff > 0) {
+    // assert.equal(c2.contrast < maxContrastDiff, true);
+  }
   console.log(" c1: ", color, " c2: ", c2.color, " constrast: ", c2.contrast);
 }
 
@@ -40,7 +53,17 @@ function testCertainCases(isLinearLuminance = true) {
   testManual("#808080", isLinearLuminance);
 }
 
-testRandom();
+function test4CustomContrastDiff() {
+  testManual("#CA94BB", true, 3, 3.5);
+  testManual("#000000", true, 3, 3.5);
+  testManual("#FFFFFF", true, 3, 3.5);
+  testManual("#7f7f7f", true, 3, 3.5);
+  testManual("#808080", true, 3, 3.5);
+}
+
+// testRandom();
 // testCertainCases(false);
 // console.log("------------------------------------------------------");
 // testCertainCases(true);
+
+test4CustomContrastDiff();

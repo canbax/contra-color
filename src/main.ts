@@ -77,17 +77,25 @@ function getRandomColor(): RGB {
   return [r, g, b];
 }
 
+function rgb2hex(rgb: RGB): string {
+  return "#" + rgb.map((c) => padz(c.toString(16), 2)).join("");
+}
+
 export function getContrastingColor(
   c: string,
-  isLinearLuminance = true
+  isLinearLuminance = true,
+  contrastDiff = 0
 ): IContraColor {
   const rgb = hex2RGBArray(c);
   let maxContrast = 0;
   let greedyResults: RGB[] = [[0, 0, 0], [255, 255, 255], getRandomColor()];
+  if (contrastDiff > 0) {
+    greedyResults.unshift(hex2RGBArray(c));
+  }
+  // process from the most important to least important
+  const channelIdxes = [1, 0, 2];
 
   for (let a = 0; a < greedyResults.length; a++) {
-    // process from the most important to least important
-    const channelIdxes = [1, 0, 2];
     maxContrast = 0;
     for (let i = 0; i < channelIdxes.length; i++) {
       const currChannelIdx = channelIdxes[i];
@@ -98,6 +106,14 @@ export function getContrastingColor(
         if (currContrast > maxContrast) {
           maxContrast = currContrast;
           greedyResults[a][currChannelIdx] = j;
+        }
+        if (
+          contrastDiff > 0 &&
+          currContrast >= contrastDiff &&
+          currContrast <= contrastDiff + 0.5
+        ) {
+          // early return to find limited contrast difference
+          return { color: rgb2hex(greedyResults[a]), contrast: currContrast };
         }
       }
     }
@@ -113,8 +129,7 @@ export function getContrastingColor(
     }
   }
 
-  const r = "#" + maxOfGreedyResults.map((c) => padz(c.toString(16), 2)).join("");
-  return { color: r, contrast: maxContrast };
+  return { color: rgb2hex(maxOfGreedyResults), contrast: maxContrast };
 }
 
 export function getContrast(c1: string, c2: string, isLinearLuminance = true) {
