@@ -46,7 +46,7 @@ function testManual(
 }
 
 function testCertainCases(isLinearLuminance = true) {
-  testManual("#CA94BB", isLinearLuminance, 21);
+  testManual("#CA94BB", isLinearLuminance);
   testManual("#000000", isLinearLuminance);
   testManual("#FFFFFF", isLinearLuminance);
   testManual("#7f7f7f", isLinearLuminance);
