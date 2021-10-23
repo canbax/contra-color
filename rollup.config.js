@@ -7,7 +7,7 @@ export default [
   {
     input: "src/main.ts",
     output: {
-      name: "inverseColor",
+      name: "contraColor",
       file: pkg.browser,
       format: "umd",
     },

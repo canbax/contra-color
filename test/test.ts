@@ -1,7 +1,7 @@
 import { getContrastingColor, getContrast } from "../src/main";
 const assert = require("assert");
 
-function getRandomColor() {
+function getRandomColor(): string {
   const letters = "0123456789ABCDEF";
   let color = "#";
   for (let i = 0; i < 6; i++) {
