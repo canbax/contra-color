@@ -38,9 +38,9 @@ function testManual(
   } else {
     c2 = getContrastingColor(color, isLinearLuminance);
   }
-  // assert.equal(c2.contrast > minContrastDiff, true);
+  assert.equal(c2.contrast > minContrastDiff, true);
   if (maxContrastDiff > 0) {
-    // assert.equal(c2.contrast < maxContrastDiff, true);
+    assert.equal(c2.contrast < maxContrastDiff, true);
   }
   console.log(" c1: ", color, " c2: ", c2.color, " constrast: ", c2.contrast);
 }
@@ -61,9 +61,10 @@ function test4CustomContrastDiff() {
   testManual("#808080", true, 3, 3.5);
 }
 
-// testRandom();
-// testCertainCases(false);
-// console.log("------------------------------------------------------");
-// testCertainCases(true);
-
+const t1 = new Date().getTime();
 test4CustomContrastDiff();
+testCertainCases();
+testCertainCases(false);
+testRandom();
+testRandom(10000, 3, false);
+console.log('delta time: ', (new Date().getTime() - t1) / 1000, ' seconds ');
