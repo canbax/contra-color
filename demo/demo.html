@@ -1,50 +1,70 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link href="style.css">
+  <link href="style.css" rel="stylesheet" />
   <script src="main.js"></script>
   <script src="contra-color.umd.js"></script>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
 
   <title>Contra Color</title>
 </head>
 
 <body>
-
   <div class="container">
     <h2 class="text-center">Contra Color</h2>
 
+    <!-- color pickers -->
     <div class="d-flex justify-content-center">
-      <span class="m-2">Background color:</span>
-      <input class="m-2" type="color" id="color1" value="#000000">
-
-      <span class="m-2">Font color:</span>
-      <input class="m-2" type="color" id="color2" value="#ffffff">
-    </div>
-    <div class="d-flex justify-content-center">
-      <button type="button" class="m-2 btn btn-outline-primary" id="randColor1">Random Background Color</button>
-      <button type="button" class="m-2 btn btn-outline-primary" id="randColor2">Random Font Color</button>
-    </div>
-    <div class="d-flex justify-content-center">
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-        <label class="form-check-label" for="flexSwitchCheckChecked"> Linear Luminance </label>
+      <div class="d-flex align-content-center flex-wrap">
+        <span class="m-2">Background color:</span>
+        <input class="m-2" type="color" id="color1" value="#000000" />
       </div>
 
-      <div class="input-group mb-3">
-        <span class="input-group-text" id="basic-addon1">Contrast Difference (Enter 0 for maximum)</span>
-        <input type="number" class="form-control" value="0" aria-label="Username"
-          aria-describedby="basic-addon1">
+      <button type="button" class="m-2 btn btn-outline-primary" id="randColor1">
+        Random Color
+      </button>
+
+      <div class="d-flex align-content-center flex-wrap">
+        <span class="m-2">Font color:</span>
+        <input class="m-2" type="color" id="color2" value="#ffffff" />
       </div>
-      <button type="button" class="m-2 btn btn-primary" id="findIdealColor">Find font color</button>
+
+      <button type="button" class="m-2 btn btn-outline-primary" id="randColor2">
+        Random Color
+      </button>
     </div>
+    <div class="bordered"></div>
+    <!-- find a contrasting color -->
+    <div class="d-flex justify-content-center">
+      <div class="form-check form-switch d-flex align-content-center flex-wrap">
+        <input class="form-check-input m-1" type="checkbox" id="isLinearLuminance" checked />
+        <label class="form-check-label" for="isLinearLuminance">
+          Linear Luminance
+        </label>
+      </div>
+      <div class="m-2">
+        <label for="contrastDiff" class="form-label">Contrast Difference</label>
+        <input type="number" class="form-control" value="0" id="contrastDiff" aria-describedby="emailHelp" />
+        <div id="emailHelp" class="form-text">
+          Enter 0 for maximum difference
+        </div>
+      </div>
+      <div class="d-flex align-content-center flex-wrap">
+        <button type="button" class="m-2 btn btn-primary" id="findIdealColor">
+          Find font color
+        </button>
+      </div>
+    </div>
+    <div class="bordered"></div>
+
+    <!-- show linear and power curve contrast values -->
     <div class="d-flex justify-content-center">
       <span class="m-2">Linear Contrast: </span>
       <h3 id="linearContrast"></h3>
@@ -53,23 +73,26 @@
     </div>
 
     <div class="d-flex justify-content-center">
-      Are below text readable enough? (Türkçe: Aşağıdaki yazılar yeterince okunaklı mı?)
+      Are below text readable enough? (Türkçe: Aşağıdaki yazılar yeterince
+      okunaklı mı?)
     </div>
     <div id="show-colors" class="d-flex justify-content-center">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec lacus lacinia, tincidunt nunc sit amet,
-      pellentesque nibh. Curabitur non ullamcorper felis, eget tempor enim. Vestibulum blandit tincidunt erat non
-      ultricies. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-      Pellentesque orci arcu, tincidunt sed iaculis consectetur, euismod quis turpis. In at lacus ut ipsum auctor
-      varius in quis est. Duis luctus diam felis, at bibendum ex lacinia ut. Vestibulum ante ipsum primis in faucibus
-      orci luctus et ultrices posuere cubilia curae; Mauris eget dapibus tellus, eu tempor tellus. Fusce volutpat
-      fermentum nibh, in pharetra ipsum egestas at. Ut sed tortor a neque ornare auctor et nec quam. Vivamus lobortis
-      gravida nibh in dapibus. Mauris vestibulum aliquet mi dignissim blandit.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec lacus
+      lacinia, tincidunt nunc sit amet, pellentesque nibh. Curabitur non
+      ullamcorper felis, eget tempor enim. Vestibulum blandit tincidunt erat
+      non ultricies. Pellentesque habitant morbi tristique senectus et netus
+      et malesuada fames ac turpis egestas. Pellentesque orci arcu, tincidunt
+      sed iaculis consectetur, euismod quis turpis. In at lacus ut ipsum
+      auctor varius in quis est. Duis luctus diam felis, at bibendum ex
+      lacinia ut. Vestibulum ante ipsum primis in faucibus orci luctus et
+      ultrices posuere cubilia curae; Mauris eget dapibus tellus, eu tempor
+      tellus. Fusce volutpat fermentum nibh, in pharetra ipsum egestas at. Ut
+      sed tortor a neque ornare auctor et nec quam. Vivamus lobortis gravida
+      nibh in dapibus. Mauris vestibulum aliquet mi dignissim blandit.
     </div>
   </div>
 
-  <div>
-
-  </div>
+  <div></div>
 
   <!-- Optional JavaScript; choose one of the two! -->
 
@@ -77,8 +100,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
-
-
 </body>
 
 </html>
