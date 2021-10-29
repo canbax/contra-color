@@ -8,9 +8,11 @@ interface IContraColor {
 
 type RGB = [number, number, number];
 
-function sRGBtoLin(colorChannel: number) {
-  // Send this function a decimal sRGB gamma encoded color channel
-  // between 0.0 and 1.0, and it returns a linearized value.
+/** Linearize RGB color channel value
+ * @param  {number} colorChannel an integer in range [0-255] represent a color channel value
+ * @returns number
+ */
+function sRGBtoLin(colorChannel: number): number {
   colorChannel = colorChannel / 255;
   if (colorChannel <= 0.04045) {
     return colorChannel / 12.92;
@@ -19,14 +21,17 @@ function sRGBtoLin(colorChannel: number) {
   }
 }
 
-function luminance(rgb: RGB) {
+function luminance(rgb: RGB): number {
   const r = sRGBtoLin(rgb[0]);
   const g = sRGBtoLin(rgb[1]);
   const b = sRGBtoLin(rgb[2]);
   return r * 0.2126 + g * 0.7152 + b * 0.0722;
 }
 
-// thanks to https://github.com/onury/invert-color
+/** thanks to https://github.com/onury/invert-color converts hexadecimal string representing an RBG color to array of numbers
+ * @param  {string} hex
+ * @returns RGB
+ */
 function hex2RGBArray(hex: string): RGB {
   if (hex.slice(0, 1) === "#") {
     hex = hex.slice(1);
@@ -45,6 +50,11 @@ function hex2RGBArray(hex: string): RGB {
   ];
 }
 
+/** calculate contrast of 2 given RBG colors
+ * @param  {RGB} rgb1
+ * @param  {RGB} rgb2
+ * @param  {} isLinearLuminance=true
+ */
 function contrast(rgb1: RGB, rgb2: RGB, isLinearLuminance = true) {
   let l1 = luminance(rgb1);
   let l2 = luminance(rgb2);
@@ -80,7 +90,13 @@ function getRandomColor(): RGB {
 function rgb2hex(rgb: RGB): string {
   return "#" + rgb.map((c) => padz(c.toString(16), 2)).join("");
 }
-
+/** get a contrasting color for a given color. If `isLinearLuminance` is true, it will use the linear luminance formula. Otherwise, it will use power curve.
+ * Set `contrastDiff` as 0 to find color with maximum contrast. If you pass a number in range (0,20], it will find a color with a the smallest contrast that is greater then `contrastDiff`
+ * @param  {string} c
+ * @param  {} isLinearLuminance=true
+ * @param  {} contrastDiff=0
+ * @returns IContraColor
+ */
 export function getContrastingColor(
   c: string,
   isLinearLuminance = true,
@@ -132,7 +148,17 @@ export function getContrastingColor(
   return { color: rgb2hex(maxOfGreedyResults), contrast: maxContrast };
 }
 
-export function getContrast(c1: string, c2: string, isLinearLuminance = true) {
+/** Find contrast of two colors. If you pass `isLinearLuminance`, it will calculate luminance with power curve.
+ * @param  {string} c1
+ * @param  {string} c2
+ * @param  {} isLinearLuminance=true
+ * @returns number
+ */
+export function getContrast(
+  c1: string,
+  c2: string,
+  isLinearLuminance = true
+): number {
   const rgb1 = hex2RGBArray(c1);
   const rgb2 = hex2RGBArray(c2);
 
