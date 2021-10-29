@@ -1,6 +1,6 @@
 # contra-color
 
-For a given color, find a contrasting color (not optimal).
+For a given color, find a contrasting color (not optimal). [Try it NOW!](https://canbax.github.io/contra-color/)
 
  <p align="center">
     <img src="docs/demo.gif" alt="Sample Screen Shot">
