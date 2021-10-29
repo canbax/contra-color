@@ -1,6 +1,6 @@
 {
   "name": "contra-color",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "For a given color, find a contrasting color (not optimal).",
   "main": "dist/contra-color.cjs.js",
   "module": "dist/contra-color.esm.js",

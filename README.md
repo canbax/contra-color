@@ -12,9 +12,22 @@ For a given color, find a contrasting color (not optimal). [Try it NOW!](https:/
 
 Run command `npm i contra-color`
 
-### Manuel build
+### import ESM module
 
-Get the source codes from Github. You can clone it with the command `git clone https://github.com/canbax/contra-color.git` or download ZIP. To build run `npm i` and then `npm run build` inside the root folder of the project.
+`import { getContrastingColor, getContrast } from 'contra-color';`
+
+### import CommonJS module
+
+```
+const contra = require("contra-color");
+console.log(contra.getContrastingColor("#0f0f0f"));
+```
+
+### import UMD module
+
+Add `<script src="https://unpkg.com/contra-color/dist/contra-color.umd.js"></script>` to your HTML file.
+
+Then you can call API functions like `contraColor.getContrastingColor('#f0f0f0')`
 
 ## API
 
