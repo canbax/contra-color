@@ -48,7 +48,11 @@ What is the best font color for a certain background color? AFAIK, this question
 
 ## Background
 
-[World Wide Web Consortium (W3C)](https://en.wikipedia.org/wiki/World_Wide_Web_Consortium) publishes some guidelines like [Web Content Accessibility Guidelines (WCAG)](https://developer.mozilla.org/en-US/docs/Glossary/WCAG). According to these, [contrast ratio](https://www.w3.org/TR/WCAG20/#contrast-ratiodef) is defined as $$(L_1 + 0.05) / (L_2 + 0.05)$$ where $L_1$ is the relative luminance of the lighter of the colors, and $L_2$ is the relative luminance of the darker of the colors. [ Mozilla Developer Network (MDN)](https://developer.mozilla.org/en-US/) provides explanations about [calculating relative luminance](https://developer.mozilla.org/en-US/docs/Web/Accessibility/Understanding_Colors_and_Luminance#calculating_relative_luminance).
+[World Wide Web Consortium (W3C)](https://en.wikipedia.org/wiki/World_Wide_Web_Consortium) publishes some guidelines like [Web Content Accessibility Guidelines (WCAG)](https://developer.mozilla.org/en-US/docs/Glossary/WCAG). According to these, [contrast ratio](https://www.w3.org/TR/WCAG20/#contrast-ratiodef) is defined as 
+```
+(L1 + 0.05) / (L2 + 0.05)
+```
+ where `L1` is the relative luminance of the lighter of the colors, and `L2` is the relative luminance of the darker of the colors. [ Mozilla Developer Network (MDN)](https://developer.mozilla.org/en-US/) provides explanations about [calculating relative luminance](https://developer.mozilla.org/en-US/docs/Web/Accessibility/Understanding_Colors_and_Luminance#calculating_relative_luminance).
 
 In the below codes, `luminance` function defines the relative luminance. If you give RBG values which are in range [0,255], the function will return a `luminance` value.
 
