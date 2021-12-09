@@ -8,7 +8,7 @@ For a given color, find a contrasting color (not optimal). [Try it NOW!](https:/
 
 ## Usage
 
-### Use [npm](https://www.npmjs.com/)
+### Use [npm](https://www.npmjs.com/package/contra-color)
 
 Run command `npm i contra-color`
 
